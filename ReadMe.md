@@ -1,1 +1,1 @@
-# Blog API and user authentication with FastAPI 
+# Todo API and user authentication with FastAPI 
