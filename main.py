@@ -1,9 +1,10 @@
 import uvicorn
 from fastapi import FastAPI, Depends, status, Response, HTTPException
 from sqlalchemy.orm import Session
+from typing import List
 
 
-from APIComponents.schemas import Todo
+from APIComponents.schemas import Todo, ShowToDo
 import APIComponents.models as models
 from APIComponents.database import engine, sessionLocal
 
@@ -28,14 +29,14 @@ def create_todo(request: Todo, db: Session = Depends(get_db)):
     db.refresh(new_todo)
     return new_todo
 
-@app.get("/todos")
+@app.get("/todos", response_model=List[ShowToDo])
 def get_todos(db: Session = Depends(get_db)):
     todos = db.query(models.Todo).all()
     print(todos)
     return todos
 
 
-@app.get("/todo/{id}", status_code=200)
+@app.get("/todo/{id}", status_code=200, response_model=ShowToDo)
 def show_selected_todo(id, response: Response, db:Session=Depends(get_db)):
     todo = db.query(models.Todo).filter(models.Todo.id==id).first()
     if not todo:
