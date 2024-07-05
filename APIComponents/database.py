@@ -9,3 +9,11 @@ SQL_ALCHEMY_DB = "sqlite:///./todos.db"
 engine = create_engine(SQL_ALCHEMY_DB, connect_args={"check_same_thread": False})
 sessionLocal = sessionmaker(bind=engine, autocommit=False, autoflush=False)
 base = declarative_base()
+
+
+def get_db():
+    db = sessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
